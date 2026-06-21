@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OfficeApp
+  xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+  xsi:type="MailApp">
+
+  <!--
+    SETUP — fill in these three values before uploading to M365 Admin Center:
+
+    1. <Id>  — generate a GUID in PowerShell:  [System.Guid]::NewGuid()
+    2. Replace every instance of ManfredMaxx with your GitHub username
+    3. Replace every instance of EmailSignatures  with your GitHub repository name
+
+    After editing, push to GitHub, enable GitHub Pages, then upload this file at:
+    M365 Admin Center → Settings → Integrated Apps → Upload custom apps
+  -->
+
+  <Id>DCC79AB3-8F0C-4C28-90EF-E27E06CD08DF</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>Your Company</ProviderName>
+  <DefaultLocale>en-US</DefaultLocale>
+  <DisplayName DefaultValue="Email Signature"/>
+  <Description DefaultValue="Insert and manage your personal email signature"/>
+  <SupportUrl DefaultValue="https://ManfredMaxx.github.io/EmailSignatures/"/>
+
+  <AppDomains>
+    <AppDomain>https://ManfredMaxx.github.io</AppDomain>
+  </AppDomains>
+
+  <Hosts>
+    <Host Name="Mailbox"/>
+  </Hosts>
+
+  <Requirements>
+    <Sets>
+      <!-- Mailbox 1.12 is required for OnMessageSend (send-block feature) -->
+      <Set Name="Mailbox" MinVersion="1.12"/>
+    </Sets>
+  </Requirements>
+
+  <!-- Legacy fallback form settings (required by schema; superseded by VersionOverrides at runtime) -->
+  <FormSettings>
+    <Form xsi:type="ItemEdit">
+      <DesktopSettings>
+        <SourceLocation DefaultValue="https://ManfredMaxx.github.io/EmailSignatures/taskpane/index.html"/>
+      </DesktopSettings>
+    </Form>
+  </FormSettings>
+
+  <Permissions>ReadWriteItem</Permissions>
+
+  <Rule xsi:type="RuleCollection" Mode="Or">
+    <Rule xsi:type="ItemIs" ItemType="Message" FormType="Edit"/>
+  </Rule>
+
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="VersionOverridesV1_0">
+    <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides/1.1" xsi:type="VersionOverridesV1_1">
+
+      <Requirements>
+        <bt:Sets DefaultMinVersion="1.12">
+          <bt:Set Name="Mailbox"/>
+        </bt:Sets>
+      </Requirements>
+
+      <Hosts>
+        <Host xsi:type="MailHost">
+
+          <!-- Runtime for the OnMessageSend event handler (JavaScript-only background process) -->
+          <Runtimes>
+            <Runtime resid="Commands.Html.Url">
+              <Override type="javascript" resid="Commands.Js.Url"/>
+            </Runtime>
+          </Runtimes>
+
+          <DesktopFormFactor>
+            <FunctionFile resid="Commands.Html.Url"/>
+
+            <!-- Ribbon button in the compose window -->
+            <ExtensionPoint xsi:type="MessageComposeCommandSurface">
+              <OfficeTab id="TabDefault">
+                <Group id="grp.EmailSignature">
+                  <Label resid="Group.Label"/>
+                  <Icon>
+                    <bt:Image Size="16" resid="Icon.16"/>
+                    <bt:Image Size="32" resid="Icon.32"/>
+                    <bt:Image Size="80" resid="Icon.80"/>
+                  </Icon>
+                  <Control xsi:type="Button" id="btn.OpenSignaturePane">
+                    <Label resid="Btn.Label"/>
+                    <Supertip>
+                      <Title resid="Btn.Label"/>
+                      <Description resid="Btn.Tooltip"/>
+                    </Supertip>
+                    <Icon>
+                      <bt:Image Size="16" resid="Icon.16"/>
+                      <bt:Image Size="32" resid="Icon.32"/>
+                      <bt:Image Size="80" resid="Icon.80"/>
+                    </Icon>
+                    <Action xsi:type="ShowTaskpane">
+                      <TaskpaneId>EmailSignaturePane</TaskpaneId>
+                      <SourceLocation resid="Taskpane.Url"/>
+                    </Action>
+                  </Control>
+                </Group>
+              </OfficeTab>
+            </ExtensionPoint>
+
+            <!-- OnMessageSend: blocks send if no signature is present -->
+            <ExtensionPoint xsi:type="LaunchEvent">
+              <LaunchEvents>
+                <!--
+                  SendMode="PromptUser" means the user sees the error message and can choose
+                  "Cancel" (go back and add signature) or "Send Anyway" (override for urgency).
+                  Change to SendMode="Block" if you want a hard block with no override.
+                -->
+                <LaunchEvent Type="OnMessageSend" FunctionName="onMessageSend" SendMode="PromptUser"/>
+              </LaunchEvents>
+              <SourceLocation resid="Commands.Html.Url"/>
+            </ExtensionPoint>
+
+          </DesktopFormFactor>
+        </Host>
+      </Hosts>
+
+      <Resources>
+        <bt:Images>
+          <!-- Icons must be PNG files. Run assets/generate-icons.html in a browser
+               to create them, then commit the resulting files to assets/ -->
+          <bt:Image id="Icon.16" DefaultValue="https://ManfredMaxx.github.io/EmailSignatures/assets/icon-16.png"/>
+          <bt:Image id="Icon.32" DefaultValue="https://ManfredMaxx.github.io/EmailSignatures/assets/icon-32.png"/>
+          <bt:Image id="Icon.80" DefaultValue="https://ManfredMaxx.github.io/EmailSignatures/assets/icon-80.png"/>
+        </bt:Images>
+        <bt:Urls>
+          <bt:Url id="Taskpane.Url"      DefaultValue="https://ManfredMaxx.github.io/EmailSignatures/taskpane/index.html"/>
+          <bt:Url id="Commands.Html.Url" DefaultValue="https://ManfredMaxx.github.io/EmailSignatures/commands/commands.html"/>
+          <bt:Url id="Commands.Js.Url"   DefaultValue="https://ManfredMaxx.github.io/EmailSignatures/commands/commands.js"/>
+        </bt:Urls>
+        <bt:ShortStrings>
+          <bt:String id="Group.Label" DefaultValue="Signature"/>
+          <bt:String id="Btn.Label"   DefaultValue="Email Signature"/>
+        </bt:ShortStrings>
+        <bt:LongStrings>
+          <bt:String id="Btn.Tooltip" DefaultValue="Open your email signature editor to insert or update your signature"/>
+        </bt:LongStrings>
+      </Resources>
+
+    </VersionOverrides>
+  </VersionOverrides>
+</OfficeApp>

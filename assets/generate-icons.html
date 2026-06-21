@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Generate Add-in Icons</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 500px; margin: 40px auto; padding: 0 20px; color: #333; }
+    h2 { color: #0078D4; }
+    .step { background: #f5f5f5; border-left: 3px solid #0078D4; padding: 12px 16px; margin: 16px 0; }
+    .icon-row { display: flex; align-items: center; gap: 16px; margin: 12px 0; }
+    canvas { border: 1px solid #ddd; }
+    a.download { display: inline-block; padding: 6px 14px; background: #0078D4; color: #fff;
+                 text-decoration: none; border-radius: 3px; font-size: 13px; }
+    a.download:hover { background: #106EBE; }
+    label { font-size: 13px; }
+    input[type=color] { margin-left: 8px; width: 40px; height: 28px; cursor: pointer; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+  <h2>Generate Add-in Icons</h2>
+
+  <div class="step">
+    <strong>Instructions:</strong>
+    <ol>
+      <li>Pick your brand color below (default is Microsoft blue)</li>
+      <li>Click each Download button to save the PNG file</li>
+      <li>Place all three files inside the <code>assets/</code> folder</li>
+      <li>Commit and push to GitHub</li>
+    </ol>
+  </div>
+
+  <label>Brand color: <input type="color" id="brandColor" value="#0078D4" oninput="redraw()"/></label>
+
+  <div id="output"></div>
+
+  <script>
+    var SIZES = [16, 32, 80];
+
+    function drawIcon(size, color) {
+      var canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      var ctx = canvas.getContext('2d');
+
+      // Background
+      ctx.fillStyle = color;
+      ctx.fillRect(0, 0, size, size);
+
+      // White envelope silhouette
+      var pad  = Math.round(size * 0.14);
+      var ex   = pad;
+      var ey   = Math.round(size * 0.24);
+      var ew   = size - pad * 2;
+      var eh   = size - ey - pad;
+
+      // Envelope body
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(ex, ey, ew, eh);
+
+      // Flap fold (triangle in brand color over the top of the envelope)
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(ex,          ey);
+      ctx.lineTo(ex + ew / 2, ey + eh * 0.46);
+      ctx.lineTo(ex + ew,     ey);
+      ctx.closePath();
+      ctx.fill();
+
+      // Bottom-left seam
+      ctx.beginPath();
+      ctx.moveTo(ex,                ey + eh);
+      ctx.lineTo(ex + ew * 0.42,    ey + eh * 0.55);
+      ctx.lineTo(ex,                ey + eh * 0.55);
+      ctx.closePath();
+      ctx.fill();
+
+      // Bottom-right seam
+      ctx.beginPath();
+      ctx.moveTo(ex + ew,           ey + eh);
+      ctx.lineTo(ex + ew * 0.58,    ey + eh * 0.55);
+      ctx.lineTo(ex + ew,           ey + eh * 0.55);
+      ctx.closePath();
+      ctx.fill();
+
+      return canvas;
+    }
+
+    function redraw() {
+      var color = document.getElementById('brandColor').value;
+      var out = document.getElementById('output');
+      out.innerHTML = '';
+
+      SIZES.forEach(function (size) {
+        var canvas = drawIcon(size, color);
+        var filename = 'icon-' + size + '.png';
+
+        var link = document.createElement('a');
+        link.href = canvas.toDataURL('image/png');
+        link.download = filename;
+        link.className = 'download';
+        link.textContent = 'Download ' + filename;
+
+        var row = document.createElement('div');
+        row.className = 'icon-row';
+        row.appendChild(canvas);
+
+        var label = document.createElement('span');
+        label.style.fontSize = '12px';
+        label.style.color = '#555';
+        label.textContent = size + '×' + size + 'px  ';
+
+        row.appendChild(label);
+        row.appendChild(link);
+        out.appendChild(row);
+      });
+    }
+
+    redraw();
+  </script>
+</body>
+</html>
