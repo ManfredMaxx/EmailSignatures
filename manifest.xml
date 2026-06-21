@@ -20,8 +20,8 @@
   <Version>1.0.0.0</Version>
   <ProviderName>Your Company</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
-  <DisplayName DefaultValue="Email Signature"/>
-  <Description DefaultValue="Insert and manage your personal email signature"/>
+  <DisplayName DefaultValue="Signify"/>
+  <Description DefaultValue="Signify — email signature manager for Microsoft Outlook"/>
   <SupportUrl DefaultValue="https://ManfredMaxx.github.io/EmailSignatures/"/>
 
   <AppDomains>
@@ -137,11 +137,11 @@
           <bt:Url id="Commands.Js.Url"   DefaultValue="https://ManfredMaxx.github.io/EmailSignatures/commands/commands.js"/>
         </bt:Urls>
         <bt:ShortStrings>
-          <bt:String id="Group.Label" DefaultValue="Signature"/>
-          <bt:String id="Btn.Label"   DefaultValue="Email Signature"/>
+          <bt:String id="Group.Label" DefaultValue="Signify"/>
+          <bt:String id="Btn.Label"   DefaultValue="Signify"/>
         </bt:ShortStrings>
         <bt:LongStrings>
-          <bt:String id="Btn.Tooltip" DefaultValue="Open your email signature editor to insert or update your signature"/>
+          <bt:String id="Btn.Tooltip" DefaultValue="Open Signify to set up or insert your email signature"/>
         </bt:LongStrings>
       </Resources>
 

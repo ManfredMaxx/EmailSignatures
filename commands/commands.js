@@ -22,7 +22,7 @@ function onMessageSend(event) {
         event.completed({
           allowEvent: false,
           errorMessage:
-            'No signature found. Click "Email Signature" in the ribbon, ' +
+            'No signature found. Click "Signify" in the ribbon, ' +
             'then click "Insert into this email" before sending.'
         });
       }
