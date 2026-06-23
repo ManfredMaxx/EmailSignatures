@@ -7,7 +7,7 @@ Signify adds a personal email signature panel directly inside Outlook. Each pers
 ## How it works in plain English
 
 - A **Signify** button appears in the ribbon at the top of every compose window
-- Clicking it opens a sidebar where you fill in your name, title, phone, compliance text, and anything else your signature needs
+- Clicking it opens a sidebar with a simple visual editor — you design your signature by typing and using a formatting toolbar (bold, fonts, colours, links, images), just like a mini word processor. There is no fixed template; it's entirely yours
 - When you're ready to send, click **Insert into this email** — your signature drops in right above any quoted reply thread, exactly where it belongs
 - If you click Send without inserting your signature, Outlook stops you and reminds you
 
@@ -85,34 +85,40 @@ Signify appears as a button in the **ribbon** — the toolbar that runs along th
 
 ---
 
-### Setting up your signature for the first time
+### Designing your signature for the first time
 
 You only need to do this once. After that, your signature is saved and ready every time.
 
 1. Open a new email (click **New Email**)
 2. Click the **Signify** button in the toolbar — a panel opens on the right side of the screen
-3. Fill in your details:
+3. You'll see an editing box with a formatting toolbar above it. **Design your signature however you like** — there's no fixed template.
 
-   | Field | What to put here |
-   |---|---|
-   | Full Name | Your first and last name |
-   | Job Title | Your official title (e.g. "Licensed Real Estate Broker") |
-   | Company | Your company or firm name |
-   | Department | Your team or division, if applicable |
-   | Office Phone | Your direct office number |
-   | Mobile | Your mobile number, if you want to include it |
-   | Email Address | Your email address |
-   | Website | Your company website (e.g. "company.com") |
-   | LinkedIn | Your LinkedIn profile URL, if desired |
-   | Office Address | Your mailing address |
-   | Accent Color | The color used for the signature border and links — pick your brand color |
-   | **Compliance Text** | **License numbers, regulatory language, certifications** — this appears in a highlighted box in your signature |
-   | Legal Disclaimer | Fine-print text that appears at the very bottom in small grey text |
+**The fastest way to start:** click **✨ Insert starter layout**. This drops in a ready-made example (name, title, contact line, a highlighted compliance box, and a fine-print disclaimer). Click into any part of it and change the wording to your own. Delete anything you don't need.
 
-4. Click the **Preview** tab at the top to see exactly how your signature will look
+**Prefer to build from scratch?** Just start typing in the box and use the toolbar:
+
+| Toolbar button | What it does |
+|---|---|
+| **B** / *I* / U | Bold, italic, underline |
+| Font | Choose a font (Arial, Calibri, Georgia, Verdana, Trebuchet, Times) |
+| Size | Set the text size — select your text first, then pick a size |
+| ▣ (colour) | Change the text colour — select your text first |
+| Align | Left, centre, or right |
+| List | Start a bulleted list |
+| 🔗 Link | Turn selected text into a clickable link |
+| 🖼 Image | Add a logo or photo by web address (see below) |
+| ✕ Clear | Remove formatting from the selected text |
+
+**Adding a logo or image — two ways:**
+- **By web address (best for logos):** click the **image** button and paste the image's web address (it must start with `https://`). This keeps your emails small and your logo crisp. *Recommended for company logos.*
+- **By paste or drag:** you can also paste an image from your clipboard or drag a small image file straight into the box. This is handy for small images, but note: pasted images don't display in Gmail and some apps, and large images can't be saved. **For a logo, use the web-address option.**
+
+> **About compliance text:** there's no special field for it — type your license numbers, regulatory language, and disclaimers directly into the signature and format them however your industry requires. The starter layout includes a highlighted box and a fine-print disclaimer you can use as a starting point.
+
+4. Click the **Preview** tab at the top to see exactly how your signature will look inside a real email
 5. When you're happy with it, click **Save**
 
-Your signature is now saved. You do not need to fill this in again unless you want to make changes.
+Your signature is now saved. You don't need to design it again unless you want to make changes.
 
 ---
 
@@ -150,8 +156,8 @@ If your title changes, you get a new phone number, or you need to update your co
 
 1. Open any new email or reply
 2. Click the **Signify** button
-3. The panel opens with your previously saved details already filled in
-4. Edit whichever fields have changed
+3. The panel opens with your saved signature already in the editor
+4. Change anything you like — edit the text, reformat, swap the logo
 5. Click **Save**
 6. Click **Insert into this email** to use the updated version in the current email
 
@@ -166,9 +172,9 @@ If you want to completely clear your signature and start fresh:
 1. Open Signify
 2. Click the **Reset** button at the bottom right
 3. The button label changes to **Tap again to confirm** — click it once more to confirm
-4. All your saved details are cleared
+4. The editor is emptied and your saved signature is cleared
 
-You can then fill in new details and save as normal.
+You can then design a new signature and save as normal.
 
 ---
 
@@ -191,9 +197,18 @@ You can then fill in new details and save as normal.
 - Check your internet connection
 - Try closing and reopening the compose window, then open Signify again
 
-**My compliance text or disclaimer isn't showing**
-- Make sure the Compliance Text and Legal Disclaimer fields are filled in and you've clicked **Save** after editing
-- Click **Preview** to confirm the text appears before inserting
+**My logo or image isn't showing**
+- Make sure you added it by **web address** (the image button), and that the address starts with `https://` and points directly to an image file
+- Pasted or dragged images don't display in Gmail and some apps — for reliable display everywhere, use the web-address option
+- Click **Preview** to confirm the image appears before inserting
+
+**It says my signature is "too large to save"**
+- This happens when an image was pasted or dragged in as a large embedded picture
+- Delete that image, then add it back using the **image button (by web address)** instead — host the image online (your website, or ask your administrator) and paste its link
+
+**My signature looks slightly different in the sent email**
+- Click **Preview** before sending to see how it will actually appear
+- Some older email apps ignore certain styles — sticking to the toolbar's fonts and simple layouts gives the most consistent results everywhere
 
 ---
 
@@ -201,8 +216,9 @@ You can then fill in new details and save as normal.
 
 | What you want to do | How to do it |
 |---|---|
-| Set up your signature | Open new email → click Signify → fill in fields → Save |
+| Set up your signature | Open new email → click Signify → design in the editor (or **Insert starter layout**) → Save |
+| Add a logo | Image button → paste the logo's `https://` web address |
 | Insert your signature | Click Signify → Insert into this email |
 | Preview your signature | Click Signify → click Preview tab |
-| Update your signature | Click Signify → edit fields → Save |
+| Update your signature | Click Signify → edit in the editor → Save |
 | Start over | Click Signify → Reset → Tap again to confirm |

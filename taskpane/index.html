@@ -52,6 +52,17 @@
       margin-top: 1px;
     }
 
+    /* ── Dev-mode notice (shown only when running outside Outlook) ───────────── */
+    #devNotice {
+      display: none;
+      background: #FFF4CE;
+      color: #6B5900;
+      font-size: 11px;
+      padding: 5px 14px;
+      border-bottom: 1px solid #F2E2A8;
+      flex-shrink: 0;
+    }
+
     /* ── Tabs ───────────────────────────────────────────────────────────────── */
     .tab-bar {
       display: flex;
@@ -80,70 +91,133 @@
     .tab-content {
       flex: 1;
       overflow-y: auto;
-      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
     }
+    #tab-edit { padding: 0; }
+    #tab-preview { padding: 12px 14px; }
 
-    /* ── Form ───────────────────────────────────────────────────────────────── */
-    .field-group { margin-bottom: 10px; }
-    .field-label {
-      display: block;
-      font-size: 10px;
-      font-weight: 600;
-      color: #605E5C;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-      margin-bottom: 3px;
+    /* ── Toolbar ────────────────────────────────────────────────────────────── */
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 2px;
+      padding: 6px 8px;
+      border-bottom: 1px solid #EDEBE9;
+      background: #FAFAFA;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      z-index: 2;
     }
-    .required { color: #A4262C; margin-left: 1px; }
-    .field-input {
-      display: block;
-      width: 100%;
-      padding: 5px 8px;
+    .tb-btn {
+      min-width: 26px;
+      height: 26px;
+      padding: 0 5px;
+      border: 1px solid transparent;
+      border-radius: 3px;
+      background: none;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      color: #323130;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    .tb-btn:hover { background: #EDEBE9; border-color: #E1DFDD; }
+    .tb-btn:active { background: #E1DFDD; }
+    .tb-btn svg { width: 15px; height: 15px; display: block; fill: currentColor; }
+    .tb-btn.tb-b { font-weight: 700; }
+    .tb-btn.tb-i { font-style: italic; font-family: Georgia, serif; }
+    .tb-btn.tb-u { text-decoration: underline; }
+    .tb-sep {
+      width: 1px;
+      height: 18px;
+      background: #E1DFDD;
+      margin: 0 3px;
+    }
+    .tb-select {
+      height: 26px;
       border: 1px solid #C8C6C4;
-      border-radius: 2px;
-      font-size: 12px;
+      border-radius: 3px;
+      background: #fff;
+      font-size: 11px;
       font-family: inherit;
       color: #323130;
-      background: #fff;
-      line-height: 1.4;
+      padding: 0 2px;
+      cursor: pointer;
     }
-    .field-input:focus {
-      outline: none;
-      border-color: #0078D4;
-      box-shadow: 0 0 0 1px #0078D4;
-    }
-    textarea.field-input {
-      resize: vertical;
-      min-height: 46px;
-    }
-    textarea.field-input-lg { min-height: 64px; }
-    .field-hint {
-      margin-top: 3px;
-      font-size: 10px;
-      color: #979593;
-    }
-
-    .color-row { display: flex; align-items: center; gap: 8px; }
-    input[type="color"].color-picker {
-      width: 36px;
-      height: 28px;
+    .tb-select.tb-font { max-width: 92px; }
+    .tb-select.tb-size { max-width: 52px; }
+    .tb-color {
+      width: 26px;
+      height: 26px;
       padding: 2px;
       border: 1px solid #C8C6C4;
-      border-radius: 2px;
+      border-radius: 3px;
+      background: #fff;
       cursor: pointer;
-      background: none;
     }
-    .color-label { font-size: 11px; color: #605E5C; }
 
-    .section-divider {
-      font-size: 10px;
-      font-weight: 700;
+    /* ── Starter-layout row ─────────────────────────────────────────────────── */
+    .starter-row {
+      padding: 7px 10px;
+      border-bottom: 1px solid #EDEBE9;
+      background: #fff;
+      flex-shrink: 0;
+    }
+    .btn-starter {
+      width: 100%;
+      padding: 6px 10px;
+      background: #EFF6FC;
       color: #0078D4;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      padding: 12px 0 5px 0;
-      border-top: 1px solid #EDEBE9;
-      margin-top: 6px;
+      border: 1px solid #C7E0F4;
+      border-radius: 3px;
+      font-size: 12px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-starter:hover { background: #DEECF9; }
+
+    /* ── Editor canvas ──────────────────────────────────────────────────────── */
+    .editor-wrap {
+      flex: 1;
+      padding: 12px 14px 4px;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    #editor {
+      flex: 1;
+      min-height: 180px;
+      border: 1px solid #C8C6C4;
+      border-radius: 3px;
+      padding: 12px;
+      overflow-y: auto;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 13px;
+      color: #333333;
+      line-height: 1.4;
+      background: #fff;
+      outline: none;
+    }
+    #editor:focus { border-color: #0078D4; box-shadow: 0 0 0 1px #0078D4; }
+    #editor img { max-width: 100%; height: auto; }
+    #editor.drag-over { border-color: #0078D4; background: #F3F9FD; }
+    #editor:empty::before {
+      content: attr(data-placeholder);
+      color: #A19F9D;
+      pointer-events: none;
+    }
+    .editor-hint {
+      font-size: 10px;
+      color: #979593;
+      padding: 6px 2px 10px;
+      line-height: 1.4;
     }
 
     /* ── Preview ────────────────────────────────────────────────────────────── */
@@ -161,6 +235,14 @@
       background: #fff;
       padding: 14px;
     }
+    .preview-meta {
+      font-size: 11px;
+      color: #605E5C;
+      border-bottom: 1px solid #EDEBE9;
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+    }
+    .preview-meta span { color: #323130; }
     .preview-new-text {
       font-size: 12px;
       color: #323130;
@@ -168,7 +250,7 @@
       margin-bottom: 12px;
       border-bottom: 1px solid #EDEBE9;
     }
-    #previewHtml { line-height: 1; }
+    #previewHtml { line-height: 1.4; }
 
     /* ── Footer ─────────────────────────────────────────────────────────────── */
     .footer {
@@ -232,10 +314,12 @@
       padding: 5px 8px;
       border-radius: 2px;
       margin-bottom: 6px;
+      line-height: 1.4;
     }
     .status-success { background: #DFF6DD; color: #107C10; }
     .status-error   { background: #FDE7E9; color: #A4262C; }
     .status-info    { background: #EFF6FC; color: #0078D4; }
+    .status-warn    { background: #FFF4CE; color: #6B5900; }
   </style>
 </head>
 <body>
@@ -247,8 +331,11 @@
     <!-- Header -->
     <div class="header">
       <h1>Signify</h1>
-      <p>Your signature is saved privately to your account</p>
+      <p>Design your signature — it saves privately to your account</p>
     </div>
+
+    <!-- Dev-mode notice (outside Outlook only) -->
+    <div id="devNotice">Preview mode — not running inside Outlook, so Insert and Save are disabled.</div>
 
     <!-- Tabs -->
     <div class="tab-bar">
@@ -258,75 +345,95 @@
 
     <!-- Edit tab -->
     <div class="tab-content" id="tab-edit">
-      <div class="field-group">
-        <label class="field-label" for="fullName">Full Name <span class="required">*</span></label>
-        <input type="text" id="fullName" class="field-input" placeholder="Jane Smith" oninput="schedulePreview()"/>
-      </div>
-      <div class="field-group">
-        <label class="field-label" for="jobTitle">Job Title</label>
-        <input type="text" id="jobTitle" class="field-input" placeholder="Senior Marketing Manager" oninput="schedulePreview()"/>
-      </div>
-      <div class="field-group">
-        <label class="field-label" for="company">Company</label>
-        <input type="text" id="company" class="field-input" placeholder="Acme Corporation" oninput="schedulePreview()"/>
-      </div>
-      <div class="field-group">
-        <label class="field-label" for="department">Department</label>
-        <input type="text" id="department" class="field-input" placeholder="Marketing" oninput="schedulePreview()"/>
+
+      <!-- Formatting toolbar -->
+      <div class="toolbar" id="toolbar">
+        <button type="button" class="tb-btn tb-b" title="Bold" onmousedown="cmd(event,'bold')">B</button>
+        <button type="button" class="tb-btn tb-i" title="Italic" onmousedown="cmd(event,'italic')">I</button>
+        <button type="button" class="tb-btn tb-u" title="Underline" onmousedown="cmd(event,'underline')">U</button>
+
+        <span class="tb-sep"></span>
+
+        <select class="tb-select tb-font" id="fontSelect" title="Font" onchange="applyFont(this.value)">
+          <option value="">Font</option>
+          <option value="Arial, Helvetica, sans-serif">Arial</option>
+          <option value="Calibri, sans-serif">Calibri</option>
+          <option value="'Trebuchet MS', sans-serif">Trebuchet</option>
+          <option value="Verdana, sans-serif">Verdana</option>
+          <option value="Georgia, serif">Georgia</option>
+          <option value="'Times New Roman', serif">Times</option>
+        </select>
+
+        <select class="tb-select tb-size" id="sizeSelect" title="Font size" onchange="applySize(this.value)">
+          <option value="">Size</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
+          <option value="13">13</option>
+          <option value="14">14</option>
+          <option value="16">16</option>
+          <option value="18">18</option>
+          <option value="24">24</option>
+        </select>
+
+        <span class="tb-sep"></span>
+
+        <input type="color" class="tb-color" id="colorInput" title="Text color"
+               value="#333333" onchange="applyColor(this.value)"/>
+
+        <span class="tb-sep"></span>
+
+        <button type="button" class="tb-btn" title="Align left" onmousedown="cmd(event,'justifyLeft')" aria-label="Align left">
+          <svg viewBox="0 0 16 16"><rect x="1" y="2" width="14" height="2"/><rect x="1" y="7" width="9" height="2"/><rect x="1" y="12" width="12" height="2"/></svg>
+        </button>
+        <button type="button" class="tb-btn" title="Align center" onmousedown="cmd(event,'justifyCenter')" aria-label="Align center">
+          <svg viewBox="0 0 16 16"><rect x="1" y="2" width="14" height="2"/><rect x="3.5" y="7" width="9" height="2"/><rect x="2" y="12" width="12" height="2"/></svg>
+        </button>
+        <button type="button" class="tb-btn" title="Align right" onmousedown="cmd(event,'justifyRight')" aria-label="Align right">
+          <svg viewBox="0 0 16 16"><rect x="1" y="2" width="14" height="2"/><rect x="6" y="7" width="9" height="2"/><rect x="3" y="12" width="12" height="2"/></svg>
+        </button>
+
+        <span class="tb-sep"></span>
+
+        <button type="button" class="tb-btn" title="Bulleted list" onmousedown="cmd(event,'insertUnorderedList')" aria-label="Bulleted list">
+          <svg viewBox="0 0 16 16"><circle cx="2" cy="4" r="1.5"/><circle cx="2" cy="8" r="1.5"/><circle cx="2" cy="12" r="1.5"/><rect x="5" y="3" width="10" height="2"/><rect x="5" y="7" width="10" height="2"/><rect x="5" y="11" width="10" height="2"/></svg>
+        </button>
+        <button type="button" class="tb-btn" title="Insert or edit link" onmousedown="insertLink(event)" aria-label="Insert link">
+          <svg viewBox="0 0 16 16"><path d="M6.5 9.5a2.5 2.5 0 0 0 3.5 0l2.5-2.5a2.5 2.5 0 0 0-3.5-3.5l-1 1 1.1 1.1 1-1a1 1 0 0 1 1.4 1.4l-2.5 2.5a1 1 0 0 1-1.4 0zM9.5 6.5a2.5 2.5 0 0 0-3.5 0L3.5 9a2.5 2.5 0 0 0 3.5 3.5l1-1-1.1-1.1-1 1a1 1 0 0 1-1.4-1.4l2.5-2.5a1 1 0 0 1 1.4 0z"/></svg>
+        </button>
+        <button type="button" class="tb-btn" title="Insert image by URL (best for logos)" onmousedown="insertImageUrl(event)" aria-label="Insert image">
+          <svg viewBox="0 0 16 16"><path d="M2 3h12v10H2zm1.5 1.5v6l3-3 2 2 2.5-2.5 1.5 1.5v-4zM5.5 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/></svg>
+        </button>
+
+        <span class="tb-sep"></span>
+
+        <button type="button" class="tb-btn" title="Clear formatting" onmousedown="cmd(event,'removeFormat')" aria-label="Clear formatting">
+          <svg viewBox="0 0 16 16"><path d="M5 3h8v2H9.6l-.7 2.2L7.2 5.5 7.3 5H5zM3.2 3.6 12.4 12.8l-1 1L8.9 11.3 8 14H6l1.1-3.5L2.2 4.6z"/></svg>
+        </button>
       </div>
 
-      <div class="field-group">
-        <label class="field-label" for="phone">Office Phone</label>
-        <input type="tel" id="phone" class="field-input" placeholder="+1 (555) 123-4567" oninput="schedulePreview()"/>
-      </div>
-      <div class="field-group">
-        <label class="field-label" for="mobile">Mobile</label>
-        <input type="tel" id="mobile" class="field-input" placeholder="+1 (555) 987-6543" oninput="schedulePreview()"/>
-      </div>
-      <div class="field-group">
-        <label class="field-label" for="email">Email Address</label>
-        <input type="email" id="email" class="field-input" placeholder="jane@company.com" oninput="schedulePreview()"/>
-      </div>
-      <div class="field-group">
-        <label class="field-label" for="website">Website</label>
-        <input type="text" id="website" class="field-input" placeholder="company.com" oninput="schedulePreview()"/>
-      </div>
-      <div class="field-group">
-        <label class="field-label" for="linkedin">LinkedIn</label>
-        <input type="text" id="linkedin" class="field-input" placeholder="linkedin.com/in/yourprofile" oninput="schedulePreview()"/>
-      </div>
-      <div class="field-group">
-        <label class="field-label" for="address">Office Address</label>
-        <textarea id="address" class="field-input" placeholder="123 Main St, Suite 100&#10;City, State 00000" oninput="schedulePreview()"></textarea>
+      <!-- Insert starter layout -->
+      <div class="starter-row">
+        <button type="button" class="btn-starter" onclick="insertStarter()">✨ Insert starter layout</button>
       </div>
 
-      <div class="field-group">
-        <label class="field-label">Accent Color</label>
-        <div class="color-row">
-          <input type="color" id="accentColor" class="color-picker" value="#0078D4" oninput="schedulePreview()"/>
-          <span class="color-label">Border &amp; link color</span>
-        </div>
-      </div>
-
-      <div class="section-divider">Compliance &amp; Disclaimers</div>
-
-      <div class="field-group">
-        <label class="field-label" for="compliance">Compliance Text</label>
-        <textarea id="compliance" class="field-input" placeholder="Licensed Real Estate Broker #12345&#10;Regulated by [Agency Name]" oninput="schedulePreview()"></textarea>
-        <p class="field-hint">License numbers, certifications, regulatory language</p>
-      </div>
-      <div class="field-group">
-        <label class="field-label" for="disclaimer">Legal Disclaimer</label>
-        <textarea id="disclaimer" class="field-input field-input-lg" placeholder="This email and any attachments are confidential and intended solely for the use of the addressee…" oninput="schedulePreview()"></textarea>
-        <p class="field-hint">Appears in small text at the bottom of the signature</p>
+      <!-- WYSIWYG canvas -->
+      <div class="editor-wrap">
+        <div id="editor" contenteditable="true" spellcheck="true"
+             data-placeholder="Design your signature here, or tap “Insert starter layout” above to begin."></div>
+        <p class="editor-hint">
+          Type and format freely. Paste or drag a small image straight in. For a company logo,
+          use the image button to add it by web address — it stays sharp and keeps emails small.
+        </p>
       </div>
     </div>
 
     <!-- Preview tab -->
     <div class="tab-content" id="tab-preview" style="display:none;">
-      <div class="preview-note">This is how your signature will appear in the email.</div>
+      <div class="preview-note">This is how your signature will look inside an email.</div>
       <div class="preview-shell">
-        <p class="preview-new-text">Your message text appears here…</p>
+        <div class="preview-meta">To: <span>client@example.com</span><br/>Subject: <span>Following up</span></div>
+        <p class="preview-new-text">Hi there,<br/><br/>Thanks for your time today — here are the details we discussed.<br/><br/>Best regards,</p>
         <div id="previewHtml"></div>
       </div>
     </div>
