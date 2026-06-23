@@ -22,6 +22,8 @@
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Signify"/>
   <Description DefaultValue="Signify — email signature manager for Microsoft Outlook"/>
+  <IconUrl DefaultValue="https://ManfredMaxx.github.io/EmailSignatures/assets/icon-64.png"/>
+  <HighResolutionIconUrl DefaultValue="https://ManfredMaxx.github.io/EmailSignatures/assets/icon-128.png"/>
   <SupportUrl DefaultValue="https://ManfredMaxx.github.io/EmailSignatures/"/>
 
   <AppDomains>
