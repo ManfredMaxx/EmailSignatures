@@ -18,7 +18,7 @@
 
   <Id>DCC79AB3-8F0C-4C28-90EF-E27E06CD08DF</Id>
   <Version>1.2.0.0</Version>
-  <ProviderName>Your Company</ProviderName>
+  <ProviderName>Signify</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Signify"/>
   <Description DefaultValue="Signify — email signature manager for Microsoft Outlook"/>
@@ -83,11 +83,6 @@
               <OfficeTab id="TabDefault">
                 <Group id="grp.EmailSignature">
                   <Label resid="Group.Label"/>
-                  <Icon>
-                    <bt:Image Size="16" resid="Icon.16"/>
-                    <bt:Image Size="32" resid="Icon.32"/>
-                    <bt:Image Size="80" resid="Icon.80"/>
-                  </Icon>
                   <Control xsi:type="Button" id="btn.OpenSignaturePane">
                     <Label resid="Btn.Label"/>
                     <Supertip>
@@ -95,12 +90,11 @@
                       <Description resid="Btn.Tooltip"/>
                     </Supertip>
                     <Icon>
-                      <bt:Image Size="16" resid="Icon.16"/>
-                      <bt:Image Size="32" resid="Icon.32"/>
-                      <bt:Image Size="80" resid="Icon.80"/>
+                      <bt:Image size="16" resid="Icon.16"/>
+                      <bt:Image size="32" resid="Icon.32"/>
+                      <bt:Image size="80" resid="Icon.80"/>
                     </Icon>
                     <Action xsi:type="ShowTaskpane">
-                      <TaskpaneId>EmailSignaturePane</TaskpaneId>
                       <SourceLocation resid="Taskpane.Url"/>
                     </Action>
                   </Control>

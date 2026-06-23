@@ -9,7 +9,7 @@
 - Storage moved from the `sigFields` object to a raw-HTML `sigHtml` key (with one-time migration of any old form data). Save guards total size (~30 KB) and handles roamingSettings error 9057.
 - Insert still appends the hidden `sig-marker` (send-block contract unchanged); `commands.js` untouched.
 - Added a no-Office boot fallback so the editor renders and is testable in a plain browser. Manifest version → 1.2.0.0.
-- Added base-manifest `<IconUrl>` (64px) and `<HighResolutionIconUrl>` (128px) — required by M365 Admin Center validation ("Manifest Icon Element Missing"); generated `assets/icon-64.png` and `icon-128.png`.
+- **Made the manifest pass M365 Admin Center validation.** Added base `<IconUrl>` (64px) + `<HighResolutionIconUrl>` (128px) with generated `assets/icon-64.png`/`icon-128.png`; removed the schema-invalid group-level `<Icon>` and the `<TaskpaneId>` from the `ShowTaskpane` action; corrected `bt:Image` `Size`→`size` casing; set a real `ProviderName`. Verified clean with `office-addin-manifest validate`.
 
 ## v1.1.0 — 2026-06-22
 - Rebranded all user-facing text to "Signify" (manifest DisplayName, ribbon button, task pane header, send-block error message)
