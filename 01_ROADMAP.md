@@ -6,6 +6,7 @@ Ship to production: enable GitHub Pages, deploy to the 5 users via M365 Admin Ce
 
 ## Next
 
+- **Mobile single source (critical requirement R7).** Extend the existing add-in with a `<MobileFormFactor>` + `OnNewMessageCompose` handler that reads the same `roamingSettings` store and auto-inserts the signature on Outlook mobile — no backend. Spike first to confirm `roamingSettings` is readable in the mobile runtime (see `04_DECISIONS.md`).
 - **Easy no-backend image hosting** so users can add a logo that displays reliably everywhere without finding their own host (see `02_BACKLOG.md` / `04_DECISIONS.md`)
 - Replace `window.prompt` URL entry with an inline in-pane input field
 

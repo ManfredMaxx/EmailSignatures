@@ -56,6 +56,7 @@ Push changes to `main` → GitHub Pages serves immediately. M365 picks up manife
 | File | Job |
 |---|---|
 | `CLAUDE.md` | This file — dev conventions + doc map |
+| `REQUIREMENTS.md` | **Binding critical requirements (R1–R7). Check every recommendation against it.** |
 | `README.md` | Customer-facing admin setup guide + user guide |
 | `00_HANDOFF.md` | Current state snapshot — where are we right now? |
 | `01_ROADMAP.md` | Direction: Now / Next / Later / Gated |
@@ -63,4 +64,6 @@ Push changes to `main` → GitHub Pages serves immediately. M365 picks up manife
 | `03_CHANGELOG.md` | Shipped history, versioned, append-only |
 | `04_DECISIONS.md` | Dated log of decisions, assumptions, and resolved unknowns |
 
-**Standing rule:** Update `00_HANDOFF.md` at the end of every session. When shipping, remove tasks from `02_BACKLOG.md`, append a line to `03_CHANGELOG.md`, and bump the version in `manifest.xml`.
+**Standing rule (requirements):** Before recommending an approach or a design, check it against the critical requirements in `REQUIREMENTS.md` (R1–R7). If it can't meet one, say so explicitly rather than trading it away silently.
+
+**Standing rule (docs):** Update `00_HANDOFF.md` at the end of every session. When shipping, remove tasks from `02_BACKLOG.md`, append a line to `03_CHANGELOG.md`, and bump the version in `manifest.xml`.

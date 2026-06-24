@@ -101,3 +101,21 @@ _Append-only. Each entry: what was decided, why, and consequences._
 **Why:** The WYSIWYG editor's content *is* HTML; storing it directly round-trips losslessly back into the editor. There are no fixed fields anymore.
 
 **Consequence:** On load, if `sigHtml` is absent but a legacy `sigFields` exists, it is rendered once into the editor (one-time migration) and dropped on the next Save. Low stakes — nothing was deployed on the old format yet.
+
+---
+
+### 2026-06-23 — Cross-platform single source (R7): mobile via event-based add-in, NO backend
+
+**Context:** New critical requirement — signatures must also work on Outlook mobile from a single source of truth. Researched current Microsoft docs (May–June 2026).
+
+**Findings (verified against learn.microsoft.com):**
+- **Outlook mobile supports event-based add-ins.** `OnNewMessageCompose` fires on mobile for new **and reply/reply-all/forward** compose (not draft edits, not the iOS Share sheet). Microsoft's own sample for this event is "add a signature to a new message."
+- **`body.setSignatureAsync` is supported on mobile** (explicitly enabled in compose mode despite mobile's 1.5 baseline) — so mobile gets the *same* after-new-text/before-quote placement (R3) as desktop.
+- Mobile add-ins **cannot** show a task pane in compose and have **no `OnMessageSend`** — so no editor and no send-block on mobile. The mobile handler is event-driven (auto-insert), which is the correct pattern there.
+- **No Microsoft Graph API for signatures** (they aren't a Graph-managed mailbox setting) — rules out a Graph-based central manager.
+- **Outlook roaming signatures do not sync to mobile** — that native feature doesn't help.
+- **Exchange Online transport-rule disclaimers DO support `%%attribute%%` tokens** (DisplayName, Title, Department, Phone, …) from Entra ID — but that is an AD-driven *template*, not the freeform WYSIWYG signature, so it can't be the single source for R2. Placement is top/bottom only (bottom on replies) → can't meet R3. Useful only as a fallback or for non-Outlook clients. Dedup across a thread is done via an exception that matches unique disclaimer text (our `sig-marker` is exactly this).
+
+**Decision:** Pursue **single source without a backend**: keep `roamingSettings['sigHtml']` as the one store; add a `<MobileFormFactor>` + `OnNewMessageCompose` handler that reads it and calls `setSignatureAsync`. Desktop/web keep the editor + manual insert + send-block; mobile auto-inserts the same stored signature. Editing happens on desktop/web; mobile stays in sync automatically. This **corrects** the earlier exploratory claim that true cross-platform sync would require a backend.
+
+**Open question to resolve in a spike before building:** confirm `Office.context.roamingSettings` is readable inside the **mobile event runtime** (it's a 1.1 API under mobile's 1.5 baseline, so expected to work, but Microsoft's sample reads `from.getAsync` instead). If it isn't, fall back to `sessionData` or an AD-token transport rule for mobile (accepting the R3 placement compromise there). Sources: Microsoft Learn — *Implement event-based activation in Outlook mobile add-ins*, *Outlook JS APIs supported on mobile*, *Organization-wide disclaimers in Exchange Online*, *Get/Update user mailboxSettings (Graph)*.
