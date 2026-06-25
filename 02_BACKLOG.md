@@ -2,12 +2,17 @@
 
 _Open tasks only. Remove when shipped; add a line to `03_CHANGELOG.md`._
 
-## Now — Deployment
+## Now — Validate v1.3.0 + finish rollout
 
-- [ ] Enable GitHub Pages (user/admin browser step) and verify the URL returns 200 for `manifest.xml`
-- [ ] End-to-end test in real Outlook: OWA compose → open Signify → design → Save → Insert → send-block check
+- [x] Enable GitHub Pages; deploy to a test user (Dan) via M365 Admin Center — done
+- [ ] Dan re-tests **v1.3.0** in Outlook (reopen compose): redesigned UI, image/link URL bar, autosave, and the **send guard** (Send with *and* without a signature — should block clearly, not hang)
 - [ ] End-to-end test: classic Outlook desktop (if accessible)
-- [ ] Deploy to 5 users via M365 Admin Center
+- [ ] Roll out to the remaining users once v1.3.0 is confirmed good
+
+## Now — R0 full closure (Prime Directive)
+
+- [ ] **Decision:** flip manifest `SendMode` `PromptUser` → `Block`? (fail-closed on add-in unavailable; ≤24 h propagation; needs admin offline policy). Code already fails closed; see `04_DECISIONS.md`.
+- [ ] If yes: change `manifest.xml` (SendMode + version bump) and guide the admin to set `OnSendAddinsEnabled` (Exchange Online PowerShell) for offline coverage.
 
 ## Next — Mobile single source (critical requirement R7)
 
@@ -23,4 +28,4 @@ _Open tasks only. Remove when shipped; add a line to `03_CHANGELOG.md`._
 
 ## Later — Polish
 
-- [ ] Consider replacing `window.prompt` for image/link URLs with an inline in-pane input field — `prompt` can be unreliable in some Outlook task-pane hosts.
+- [ ] Field-tune the editor redesign and line-spacing fidelity based on Dan's feedback (complex pasted signatures with tables may still render as objects in Outlook).

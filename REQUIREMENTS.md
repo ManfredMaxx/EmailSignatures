@@ -6,8 +6,16 @@ _Last updated: 2026-06-23. Status reflects the v1.2.0 build._
 
 ## Critical (non-negotiable)
 
+> ### 🛑 R0 — PRIME DIRECTIVE (outranks everything below)
+> **An email must NEVER be sent without a signature unless the user gives explicit, conscious permission** (a deliberate "Send Anyway"). The send guard must **fail CLOSED**: if it cannot confirm a signature is present — because of an error, a timeout, or the add-in being unavailable/offline — it must **block or prompt, never silently send**. A silent or accidental unsigned send is the catastrophic *fail-deadly* outcome, to be prevented above all else, even at the cost of convenience. Every change to a send path is judged against this first.
+>
+> **Platform facts (verified, Microsoft Smart Alerts docs):** `SendMode="PromptUser"` and `"SoftBlock"` **send the message** if the add-in errors/can't load/is offline (fail-open). Only `SendMode="Block"` refuses to send when the add-in is unavailable (fail-closed). For full coverage when Outlook launches offline, the admin must also set the `OnSendAddinsEnabled` (Web/new Windows) or `OnSendAddinsWaitForLoad` (Mac) mailbox policy. Residual platform gaps that the add-in alone cannot close: Simple-MAPI sends, and offline-launch without the policy.
+>
+> **Status:** 🟡 Handler hardened to **fail-closed** (this build: no silent send on read error/timeout; no hang; conscious "Send Anyway" override offered only when a signature is genuinely missing). Full closure (`SendMode="Block"` + admin offline policy) **pending Dan's decision**.
+
 | # | Requirement | Why | Status |
 |---|---|---|---|
+| **R0** | **Fail-safe send guard** — never send unsigned without explicit permission; fail **closed** on any uncertainty | **Prime Directive.** The compliance catastrophe is a silent/accidental unsigned send | 🟡 Handler fail-closed (this build); full hardening pending — see callout above |
 | **R1** | **Zero recurring cost.** A free replacement for Exclaimer — no per-user SaaS fees, no mandatory paid backend/server. | The entire reason the project exists. | ✅ Met — static files on free GitHub Pages; per-user data in the mailbox. |
 | **R2** | **Freeform per-user signatures via a WYSIWYG editor.** Each user designs their own signature visually (fonts, colours, layout, images, compliance text). **NOT** a fixed template they fill in. | Compliance-conscious industry; signatures differ per person and must carry license numbers / regulatory text laid out as required. | ✅ Met — v1.2.0 contenteditable editor. |
 | **R3** | **Correct placement.** Signature lands **after the new message text and before the quoted thread** — never dumped at the very bottom. | The core gap in server-side stamping; the reason we chose a client add-in. | ✅ Met on desktop/web via `setSignatureAsync`; same API is available on mobile. |
@@ -27,7 +35,8 @@ _Last updated: 2026-06-23. Status reflects the v1.2.0 build._
 - Maintain the doc system; update docs after each change/build.
 
 ## How to use this doc
-Before recommending an approach, confirm it against **R1–R7**. Common violations to watch for:
+Before recommending an approach, confirm it against **R0–R7**. Common violations to watch for:
+- **Any send path that fails open** (allows the send when it can't confirm a signature) → breaks **R0**. When in doubt, block/prompt.
 - A paid backend or SaaS → breaks **R1**.
 - A fixed/AD-template signature in place of freeform → breaks **R2**.
 - Bottom-of-email placement (e.g. a transport-rule disclaimer) → breaks **R3**.

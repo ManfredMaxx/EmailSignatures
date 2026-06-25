@@ -119,3 +119,17 @@ _Append-only. Each entry: what was decided, why, and consequences._
 **Decision:** Pursue **single source without a backend**: keep `roamingSettings['sigHtml']` as the one store; add a `<MobileFormFactor>` + `OnNewMessageCompose` handler that reads it and calls `setSignatureAsync`. Desktop/web keep the editor + manual insert + send-block; mobile auto-inserts the same stored signature. Editing happens on desktop/web; mobile stays in sync automatically. This **corrects** the earlier exploratory claim that true cross-platform sync would require a backend.
 
 **Open question to resolve in a spike before building:** confirm `Office.context.roamingSettings` is readable inside the **mobile event runtime** (it's a 1.1 API under mobile's 1.5 baseline, so expected to work, but Microsoft's sample reads `from.getAsync` instead). If it isn't, fall back to `sessionData` or an AD-token transport rule for mobile (accepting the R3 placement compromise there). Sources: Microsoft Learn — *Implement event-based activation in Outlook mobile add-ins*, *Outlook JS APIs supported on mobile*, *Organization-wide disclaimers in Exchange Online*, *Get/Update user mailboxSettings (Graph)*.
+
+---
+
+### 2026-06-25 — R0 Prime Directive: send guard must fail CLOSED
+
+**Context:** Dan elevated "never send unsigned without express permission" to the top requirement (R0), defining the *fail-deadly* outcome as a silent/accidental unsigned send. Researched Smart Alerts failure semantics (Microsoft docs).
+
+**Verified platform facts:** When the OnMessageSend add-in errors / can't load / is offline — `SendMode="PromptUser"` and `"SoftBlock"` **send the message** (fail-open); only `SendMode="Block"` refuses to send (fail-closed). Timeout threshold is ~5 s (long-running dialog) / 5 min (hard timeout). For the *Outlook-launched-offline* gap, the admin must also set `OnSendAddinsEnabled` (Web/new Windows, via Exchange Online PowerShell) or `OnSendAddinsWaitForLoad` (Mac). Runtime **send-mode override** (requirement set 1.14) lets the handler downgrade Block→PromptUser per-event. Residual gaps the add-in alone can't close: Simple-MAPI sends; offline-launch without the policy.
+
+**Decisions:**
+- **Code (shipped now, fail-closed):** the old fail-open path (`allowEvent:true` on read error) is **removed**. `commands.js` now: inits `Office.onReady`; on read error/timeout → `allowEvent:false` (block); on missing signature → `allowEvent:false` + `sendModeOverride:PromptUser` (conscious "Send Anyway" = express permission); ~4 s safety timeout that blocks rather than hangs. This also fixes the New-Outlook hang (handler now always completes, and quickly).
+- **Manifest `SendMode="Block"` (pending Dan's decision):** the current manifest stays `PromptUser` so the code fix ships instantly (hosted files, ~1 min) without the 24 h manifest-propagation delay. Flipping to `Block` is the only way to close the *add-in-unavailable* fail-open hole; it's a manifest change (≤24 h) and benefits from the admin offline policy. Tracked as a Now item in `01_ROADMAP.md` / `02_BACKLOG.md`.
+
+**Why split the ship:** the code hardening is the high-value, instant part and is safe under either send mode; the manifest flip is slower (24 h) and carries an ops choice (strictness + admin policy), so it waits for an explicit decision. Sources: Microsoft Learn — *Handle OnMessageSend … with Smart Alerts* (send-mode options, add-in-unavailable, timeout, offline behaviour).

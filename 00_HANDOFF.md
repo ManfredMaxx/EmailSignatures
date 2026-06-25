@@ -1,32 +1,33 @@
 # Signify — Handoff
 
-_Last updated: 2026-06-22_
+_Last updated: 2026-06-25_
 
 ## Where we are right now
 
-**v1.2.0 (WYSIWYG editor) is built and verified locally — not yet committed/pushed.** The form-based editor is fully replaced: `taskpane/index.html` + `taskpane/index.js` are now a freeform `contenteditable` editor with a formatting toolbar, image insert (URL + guarded paste/drag), an Insert-starter-layout button, an email-context preview, and a no-Office boot fallback. `commands.js` (send-block) is unchanged; `manifest.xml` is bumped to 1.2.0.0. README user guide rewritten for the new workflow.
+**v1.2.0 is deployed to a test user (Dan) and v1.3.0 fixes are pushed (code-only).** GitHub Pages is live; the add-in is admin-deployed in M365 and appears in new Outlook on Windows.
 
-Verified in a Chromium preview (matches the New Outlook/OWA engine): clean inline styling (no `<font>`/`class`), font-size→span conversion, image-by-URL, paste sanitiser, sig-marker in the insert payload, image size guard + deliverability warning, and the preview render — all pass.
+Dan field-tested v1.2.0 and found real issues; all are fixed in **v1.3.0** (pushed to `main`, code-only, manifest untouched):
+- **Send guard now fails CLOSED (R0 Prime Directive).** `commands.js` rewritten: no silent send on read error; `Office.onReady` init (fixes the New-Outlook hang); ~4 s block-don't-hang safety net; "Send Anyway" override only when a signature is genuinely missing.
+- **Editor redesigned** — modern, roomier toolbar; refined spacing.
+- **Image/Link by URL fixed** — inline URL input bar (replaced `window.prompt`, which new Outlook silently blocks).
+- **Auto-save** — localStorage working copy + restore; nothing lost if Save is forgotten.
+- **Colour swatch palette**; **tighter line spacing** (`defaultParagraphSeparator=div`).
 
-**v1.1.0 (form-based) is what's currently live** at https://github.com/ManfredMaxx/EmailSignatures (public repo).
+These are hosted-file changes → live ~1 min after push; Dan reopens the compose window (or restarts Outlook) to pick them up.
 
-## Blocker (requires user action)
+## Pending decision (Dan)
 
-GitHub Pages has not been enabled. User must:
-1. Go to github.com/ManfredMaxx/EmailSignatures → Settings → Pages
-2. Source → Deploy from a branch → main / root → Save
-3. Wait ~2 min for green banner
-
-M365 deployment is blocked until Pages is live.
+**Manifest `SendMode="Block"` to fully close R0.** Code fails closed, but the *manifest* is still `PromptUser`, which means if the add-in can't load/offline, Outlook still sends (fail-open at the platform level). Only `SendMode="Block"` closes that — but it's a manifest change (≤24 h propagation) and wants an admin offline policy (`OnSendAddinsEnabled` via Exchange PowerShell). Asked Dan to choose strictness (Block+override / Block strict / keep PromptUser). See `04_DECISIONS.md`.
 
 ## What's next (in order)
 
-1. Commit + push the v1.2.0 WYSIWYG build to GitHub
-2. User enables GitHub Pages (browser-only action — see Blocker)
-3. End-to-end test in real Outlook (OWA + desktop): design → Save → Insert → send-block
-4. M365 Admin Center deployment to the 5 users
-5. **Revisit easy image hosting** (path B) so logos "just work" (see BACKLOG / DECISIONS)
+1. **Dan re-tests v1.3.0** in Outlook (reopen compose): the redesign, URL buttons, autosave, and especially the **send guard** (Send with/without a signature — should now show a clear block, not hang).
+2. **Resolve the `SendMode="Block"` decision** → if yes, change manifest (+ version bump) and guide the admin offline policy.
+3. **Mobile single source (R7)** — start with the roamingSettings-in-mobile-runtime spike (see BACKLOG / DECISIONS).
+4. **Easy image hosting** (R6, path B).
 
 ## Flagged to revisit
 
-- **Easy no-backend image hosting** (path B). For now logos go in by URL (users host them) or as small guarded base64 pastes. The durable fix — a low-friction hosted-URL flow with no backend — is captured in `02_BACKLOG.md` and `04_DECISIONS.md`.
+- **R0 full closure** — manifest `SendMode="Block"` + admin offline policy (pending decision above).
+- **Easy no-backend image hosting** (R6, path B) — see `02_BACKLOG.md` / `04_DECISIONS.md`.
+- **Mobile single source** (R7) — see `02_BACKLOG.md`.

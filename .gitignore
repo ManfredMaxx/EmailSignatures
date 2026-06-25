@@ -1,2 +1,5 @@
 .DS_Store
 **/.DS_Store
+
+# Local-only session brief — contains operational details (emails, tenant); keep out of the public repo
+SESSION_CONTEXT.md

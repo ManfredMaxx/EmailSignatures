@@ -1,5 +1,13 @@
 # Signify — Changelog
 
+## v1.3.0 — 2026-06-25 (editor redesign + R0 send-guard hardening; code-only, manifest unchanged)
+- **R0 / Prime Directive established** (see `REQUIREMENTS.md`). The send guard now **fails CLOSED**: `commands.js` no longer allows a send when it can't verify a signature (was fail-open on read error — a silent-unsigned-send hole). Added `Office.onReady` init (fixes the hang), a ~4 s completion safety net that **blocks** rather than hanging, and a runtime "Send Anyway" override offered **only** when a signature is genuinely missing. Full closure (manifest `SendMode="Block"` + admin offline policy) is **pending Dan's decision** — manifest intentionally unchanged in this release.
+- **Editor UI redesigned** — roomier, modern toolbar (36 px controls, clearer grouping, refined palette and spacing); larger editor and footer.
+- **Image / Link by URL fixed** — replaced `window.prompt` (silently blocked in new Outlook) with an **inline URL input bar**.
+- **Auto-save** — the working copy is kept in `localStorage` and restored on reopen, with an unsaved/saved indicator; work is no longer lost if the user forgets to Save.
+- **Colour picker** — preset swatch palette + custom, replacing the raw OS colour dialog.
+- **Line spacing** — `defaultParagraphSeparator=div` + zeroed editor block margins for tighter, email-faithful spacing; starter layout rebuilt with `<div>`s. (Pasted complex/3rd-party signatures with tables may still render as objects in Outlook — building in the editor is most faithful.)
+
 ## v1.2.0 — 2026-06-22
 - **Replaced the form-based editor with a full WYSIWYG rich-text editor.** Users now design their signature freely (no fixed template) in a `contenteditable` canvas with a formatting toolbar: bold/italic/underline, font family, font size, text colour, alignment, bullet list, link, and clear-formatting.
 - Font size and colour emit clean inline `<span style>` (no `<font>` tags) via `styleWithCSS` + a size-7→px conversion, so output survives email clients.
