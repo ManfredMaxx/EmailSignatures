@@ -133,3 +133,13 @@ _Append-only. Each entry: what was decided, why, and consequences._
 - **Manifest `SendMode="Block"` (pending Dan's decision):** the current manifest stays `PromptUser` so the code fix ships instantly (hosted files, ~1 min) without the 24 h manifest-propagation delay. Flipping to `Block` is the only way to close the *add-in-unavailable* fail-open hole; it's a manifest change (≤24 h) and benefits from the admin offline policy. Tracked as a Now item in `01_ROADMAP.md` / `02_BACKLOG.md`.
 
 **Why split the ship:** the code hardening is the high-value, instant part and is safe under either send mode; the manifest flip is slower (24 h) and carries an ops choice (strictness + admin policy), so it waits for an explicit decision. Sources: Microsoft Learn — *Handle OnMessageSend … with Smart Alerts* (send-mode options, add-in-unavailable, timeout, offline behaviour).
+
+---
+
+### 2026-06-25 — Image hosting is a near-term build issue (32 KB will bite often)
+
+**Question (Dan):** can a signature image URL be a local file, or must it be hosted? Will we keep hitting the 32 KB cap?
+
+**Answer / facts:** A signature image **cannot** be a local file. The email is delivered to *recipients* who can't access the sender's disk, and mail clients block `file://` for security. A signature image must be either (a) **hosted at a public http/https URL**, or (b) **embedded** (base64 data-URI or CID attachment). The ~32 KB `roamingSettings` cap only constrains *embedded* (base64) images — those are stored in the mailbox with the signature. **Hosted URLs are a few bytes in storage and dodge the cap**, and also render far better (Gmail strips base64; Outlook demotes it to an attachment). So: yes, embedded images will hit 32 KB frequently — the durable answer is hosting, not embedding.
+
+**Decision / flag:** elevate **R6 "easy no-backend image hosting"** from a nice-to-have to a likely **near-term build** — a small interface so a user's logo gets a hosted URL without manual git/hosting work. Since we already run on GitHub Pages, the cheapest path is logos living in the repo (`assets/logos/…`) referenced by their Pages URL; the open problem is a low-friction way to get a file in (non-technical users can't git-commit — likely an admin one-time drop or a guided upload). A backend image host is the fallback if no-backend proves too clunky. Tracked in `01_ROADMAP.md` / `02_BACKLOG.md`.

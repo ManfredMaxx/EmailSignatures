@@ -3,3 +3,6 @@
 
 # Local-only session brief — contains operational details (emails, tenant); keep out of the public repo
 SESSION_CONTEXT.md
+
+# Local Claude Code tooling config (machine-specific absolute paths)
+.claude/

@@ -11,7 +11,7 @@ _Last updated: 2026-06-23. Status reflects the v1.2.0 build._
 >
 > **Platform facts (verified, Microsoft Smart Alerts docs):** `SendMode="PromptUser"` and `"SoftBlock"` **send the message** if the add-in errors/can't load/is offline (fail-open). Only `SendMode="Block"` refuses to send when the add-in is unavailable (fail-closed). For full coverage when Outlook launches offline, the admin must also set the `OnSendAddinsEnabled` (Web/new Windows) or `OnSendAddinsWaitForLoad` (Mac) mailbox policy. Residual platform gaps that the add-in alone cannot close: Simple-MAPI sends, and offline-launch without the policy.
 >
-> **Status:** 🟡 Handler hardened to **fail-closed** (v1.3.0: no silent send on read error/timeout; no hang; conscious "Send Anyway" override offered only when a signature is genuinely missing). Full closure (`SendMode="Block"` + admin offline policy) **deferred by Dan (2026-06-25)** as a critical backlog decision — interim `SendMode="PromptUser"` accepted to avoid destabilising live Outlook; a more robust system is ultimately intended. See `02_BACKLOG.md`.
+> **Status:** 🟡 Handler hardened to **fail-closed** (v1.3.0: no silent send on read error/timeout; no hang; conscious "Send Anyway" override offered only when a signature is genuinely missing). Full closure (`SendMode="Block"` + admin offline policy) **deferred by Dan (2026-06-25)** as a critical backlog decision — interim `SendMode="PromptUser"` accepted to avoid destabilising live Outlook; a more robust system is ultimately intended. See `02_BACKLOG.md`. A prominent, **off-by-default, warning-gated user toggle** to disable the check ships in v1.4.0 (`sendBlockDisabled`); any future strict mechanism must keep an equivalent toggle.
 
 | # | Requirement | Why | Status |
 |---|---|---|---|

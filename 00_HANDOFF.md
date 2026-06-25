@@ -4,9 +4,11 @@ _Last updated: 2026-06-25_
 
 ## Where we are right now
 
-**v1.2.0 is deployed to a test user (Dan) and v1.3.0 fixes are pushed (code-only).** GitHub Pages is live; the add-in is admin-deployed in M365 and appears in new Outlook on Windows.
+**v1.4.0 is the latest, pushed (code-only).** v1.2.0 is what's admin-deployed in M365 to the test user (Dan); the add-in loads its files from GitHub Pages, so reopening Outlook picks up the latest code. GitHub Pages is live; it appears in new Outlook on Windows.
 
-Dan field-tested v1.2.0 and found real issues; all are fixed in **v1.3.0** (pushed to `main`, code-only, manifest untouched):
+**v1.4.0 — signature library + send-block toggle** (just shipped, verified in the local preview): multiple named signatures (picker + New / Rename / Delete with in-pane confirm), restore-last-saved, per-signature autosave, a deletable **Example** replacing the old starter button, and an off-by-default **"Require a signature to send"** toggle (warning-gated, stored in roamingSettings, honoured by the send guard; loud banner when off). Purged all `window.confirm`/`alert`/`prompt` (silently blocked in new Outlook — the cause of the dead starter button).
+
+**v1.3.0 — earlier this session** fixed Dan's field bugs (all code, manifest untouched):
 - **Send guard now fails CLOSED (R0 Prime Directive).** `commands.js` rewritten: no silent send on read error; `Office.onReady` init (fixes the New-Outlook hang); ~4 s block-don't-hang safety net; "Send Anyway" override only when a signature is genuinely missing.
 - **Editor redesigned** — modern, roomier toolbar; refined spacing.
 - **Image/Link by URL fixed** — inline URL input bar (replaced `window.prompt`, which new Outlook silently blocks).

@@ -1,5 +1,14 @@
 # Signify — Changelog
 
+## v1.4.0 — 2026-06-25 (signature library + send-block toggle; code-only, manifest unchanged)
+- **Multiple saved signatures.** Storage moved from a single `sigHtml` to a named library (`sigLibrary` in roamingSettings): a picker dropdown plus **New / Rename / Delete** (delete uses an in-pane confirm). Save / Insert / autosave all act on the selected signature. Existing `sigHtml` / `sigFields` migrate into the library automatically.
+- **Restore last saved** — revert the open editor to its stored version (discards the local draft).
+- **Per-signature auto-save** — each signature's working copy is kept in `localStorage` and restored on reopen; switching signatures preserves unsaved edits.
+- **Starter button removed** — a deletable "Example signature" is seeded on first run instead (and New signatures start from that template), so the library demonstrates itself.
+- **Send-block disable toggle** — a prominent, **off-by-default** "Require a signature to send" switch, gated by an in-pane warning; stored in roamingSettings (`sendBlockDisabled`) and honoured by the send guard (`commands.js`). A loud banner shows whenever protection is off. Consistent with R0 (conscious, warned, standing express permission).
+- **Purged `window.confirm` / `alert` / `prompt`** everywhere — all silently blocked in new Outlook (this is what made the old starter button and URL dialog do nothing); replaced with in-pane UI.
+- The library's total size is guarded (<32 KB); embedded images still count against it — durable fix is hosted-URL images (image-hosting build issue, R6, in `04_DECISIONS.md`).
+
 ## v1.3.0 — 2026-06-25 (editor redesign + R0 send-guard hardening; code-only, manifest unchanged)
 - **R0 / Prime Directive established** (see `REQUIREMENTS.md`). The send guard now **fails CLOSED**: `commands.js` no longer allows a send when it can't verify a signature (was fail-open on read error — a silent-unsigned-send hole). Added `Office.onReady` init (fixes the hang), a ~4 s completion safety net that **blocks** rather than hanging, and a runtime "Send Anyway" override offered **only** when a signature is genuinely missing. Full closure (manifest `SendMode="Block"` + admin offline policy) is **pending Dan's decision** — manifest intentionally unchanged in this release.
 - **Editor UI redesigned** — roomier, modern toolbar (36 px controls, clearer grouping, refined palette and spacing); larger editor and footer.

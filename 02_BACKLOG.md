@@ -16,13 +16,7 @@ _Open tasks only. Remove when shipped; add a line to `03_CHANGELOG.md`._
 - [ ] **CRITICAL:** decide how to fully close R0 — either flip manifest to `SendMode="Block"` (+ admin `OnSendAddinsEnabled` offline policy; ≤24 h propagation), or design a more robust system. Trade-off: stability/UX vs. the residual platform fail-open hole (unsigned email can still send if the add-in is unavailable/offline). Rationale + platform facts in `04_DECISIONS.md`.
 - [ ] **Constraint on the above (Dan, 2026-06-25):** whatever strict mechanism is chosen, it **must include a user-facing way to disable it** — a *prominent, off-by-default, in-pane-warning-gated* toggle. (The interim version of this toggle ships now for the PromptUser block — see "Agreed next build.")
 
-## Now — Agreed next build (signature library + send-block toggle)
-
-- [ ] **Multiple saved signatures** (replaces single `sigHtml` with a named list in `roamingSettings`; picker dropdown + New/Rename/**Delete with in-pane confirm**; Save/Insert/autosave act on the active one; guard total size <32 KB). Migrate existing `sigHtml` into the list.
-- [ ] **Restore last saved** button (revert the open editor to its stored version).
-- [ ] **Remove the "Insert starter layout" button**; seed a deletable **Example signature** in the library on first run instead.
-- [ ] **Send-block disable toggle** for the current PromptUser block: prominent, **off by default**, gated by an **in-pane warning panel** (no `window.confirm`/`alert`); stored in `roamingSettings`; read by `commands.js` at send time. Consistent with R0 (conscious, warned, standing express permission).
-- [ ] **Purge `window.confirm`/`alert`/`prompt`** everywhere (all silently blocked in new Outlook) — replace with in-pane UI.
+_(Signature library, restore-last-saved, delete-with-confirm, the off-by-default send-block toggle, and the window.confirm/alert/prompt purge all **shipped in v1.4.0** — see `03_CHANGELOG.md`.)_
 
 ## Next — Mobile single source (critical requirement R7)
 
