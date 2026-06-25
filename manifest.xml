@@ -17,11 +17,11 @@
   -->
 
   <Id>DCC79AB3-8F0C-4C28-90EF-E27E06CD08DF</Id>
-  <Version>1.2.0.0</Version>
-  <ProviderName>Signify</ProviderName>
+  <Version>1.4.0.0</Version>
+  <ProviderName>Dan Lipworth</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Signify"/>
-  <Description DefaultValue="Signify — email signature manager for Microsoft Outlook"/>
+  <Description DefaultValue="Signify — email signature manager for Microsoft Outlook. Built for Compliance."/>
   <IconUrl DefaultValue="https://ManfredMaxx.github.io/EmailSignatures/assets/icon-64.png"/>
   <HighResolutionIconUrl DefaultValue="https://ManfredMaxx.github.io/EmailSignatures/assets/icon-128.png"/>
   <SupportUrl DefaultValue="https://ManfredMaxx.github.io/EmailSignatures/"/>
