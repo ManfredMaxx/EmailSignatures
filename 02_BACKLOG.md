@@ -35,6 +35,10 @@ _(Signature library, restore-last-saved, delete-with-confirm, the off-by-default
 
 ✅ Live at `https://manfredmaxx.github.io/EmailSignatures/` (`index.html` at repo root). Honest positioning, editor mockup, compliance band, 4-step admin install guide; the manifest `SupportUrl` link resolves to it. Polish ideas for later: swap the CSS editor mockup for real Outlook screenshots, add an FAQ, consider a custom domain, and tune copy to Dan's taste.
 
+## Later — Manifest exposure / distribution control (flagged by Dan, 2026-06-25)
+
+- [ ] Revisit how locked-down the manifest should be. The link was removed from the **landing page** (done), but it still appears in the public **README** and the manifest stays fetchable at its URL (public repo). Options when revisited: (a) also strip from README; (b) rethink hosting for true privacy (a private repo breaks free GitHub Pages → would mean moving hosting). Note: a leaked manifest is a distribution/branding concern, **not** data exposure — each user's signatures stay in their own mailbox. Reason for the urgency wasn't given; confirm with Dan when picked up.
+
 ## Later — Polish
 
 - [ ] Field-tune the editor redesign and line-spacing fidelity based on Dan's feedback (complex pasted signatures with tables may still render as objects in Outlook).
