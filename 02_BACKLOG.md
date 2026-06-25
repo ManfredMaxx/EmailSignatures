@@ -20,11 +20,12 @@ _(Signature library, restore-last-saved, delete-with-confirm, the off-by-default
 
 ## Next — Mobile single source (critical requirement R7)
 
-- [ ] **Spike:** confirm `Office.context.roamingSettings.get('sigHtml')` is readable inside the Outlook **mobile** event runtime (`OnNewMessageCompose`). If not, evaluate `sessionData` / AD-token transport-rule fallback.
-- [ ] Add `<MobileFormFactor>` + `LaunchEvent OnNewMessageCompose` to `manifest.xml` (XML manifest required for mobile).
-- [ ] Implement the mobile handler: read `sigHtml`, wrap + marker, `setSignatureAsync` (reuse the desktop insert path).
-- [ ] Decide whether desktop/web should also auto-insert on compose (consistency) while keeping the send-block as the safety net.
-- [ ] Test on Outlook iOS/Android: new + reply/forward; confirm placement and that edits on desktop reflect on mobile.
+- [~] **Spike — BUILT, awaiting Dan's iOS test.** Isolated test add-in in `spike/` (own GUID) confirms whether `roamingSettings` is readable in the iOS `OnNewMessageCompose` runtime + `setSignatureAsync` works on iOS. Deploy alongside Signify → test on iPhone → remove. If it fails → `sessionData` / fallback. **Gates everything below.**
+- [ ] **Data model (Dan's decisions 2026-06-25):** signatures gain role assignments — desktop-new, desktop-reply, **mobile-new default, mobile-reply default** (like Outlook's native new-vs-reply, plus dedicated mobile defaults).
+- [ ] **Desktop:** add an **auto-insert-on-compose option** (alongside the manual button + send-block); pick new vs reply signature by compose type.
+- [ ] **Mobile handler:** on `OnNewMessageCompose`, use `getComposeTypeAsync` (mobile-supported) to pick the mobile new-vs-reply default, read from `roamingSettings`, wrap + marker, `setSignatureAsync`.
+- [ ] **Manifest:** add `<MobileFormFactor>` + `OnNewMessageCompose` to production `manifest.xml` (mind the 1.12-vs-1.5 requirement-set interplay; XML manifest required).
+- [ ] Test on Outlook iOS: new + reply/forward; confirm placement and that desktop edits reflect on mobile.
 
 ## Next — Image hosting (revisit)
 

@@ -143,3 +143,16 @@ _Append-only. Each entry: what was decided, why, and consequences._
 **Answer / facts:** A signature image **cannot** be a local file. The email is delivered to *recipients* who can't access the sender's disk, and mail clients block `file://` for security. A signature image must be either (a) **hosted at a public http/https URL**, or (b) **embedded** (base64 data-URI or CID attachment). The ~32 KB `roamingSettings` cap only constrains *embedded* (base64) images — those are stored in the mailbox with the signature. **Hosted URLs are a few bytes in storage and dodge the cap**, and also render far better (Gmail strips base64; Outlook demotes it to an attachment). So: yes, embedded images will hit 32 KB frequently — the durable answer is hosting, not embedding.
 
 **Decision / flag:** elevate **R6 "easy no-backend image hosting"** from a nice-to-have to a likely **near-term build** — a small interface so a user's logo gets a hosted URL without manual git/hosting work. Since we already run on GitHub Pages, the cheapest path is logos living in the repo (`assets/logos/…`) referenced by their Pages URL; the open problem is a low-friction way to get a file in (non-technical users can't git-commit — likely an admin one-time drop or a guided upload). A backend image host is the fallback if no-backend proves too clunky. Tracked in `01_ROADMAP.md` / `02_BACKLOG.md`.
+
+---
+
+### 2026-06-25 — Mobile build decisions + de-risk spike
+
+**Decisions (Dan):**
+1. Mobile auto-inserts a **dedicated mobile default** signature (not merely the desktop "active" one).
+2. Desktop gets an **auto-insert-on-compose option** (alongside today's manual button + send-block).
+3. **Separate signatures for New Email vs Reply/Forward** on desktop (like Outlook's native new-vs-reply signatures). Porting the new/reply distinction to mobile is desirable, not critical.
+
+**Implication for the data model:** the signature library gains **role assignments** per signature — e.g. desktop-new, desktop-reply, mobile-new, mobile-reply. Good news for #3 on mobile: `getComposeTypeAsync` **is supported on Outlook mobile**, so the mobile handler can tell new vs reply/forward and pick the matching default — so the new/reply distinction *can* port to mobile.
+
+**Spike (built, awaiting Dan's on-device test):** to avoid risking the live desktop send-block, the de-risk is an **isolated test add-in** in `spike/` (own GUID `8FD29D48-…`), not a change to production. A desktop taskpane writes a test value to `roamingSettings`; an `OnNewMessageCompose` handler reads it back on iOS and reports — via an in-Outlook notification + inserted text — whether (a) the iOS event runtime can read `roamingSettings` and (b) `setSignatureAsync` works on iOS. Manifest min 1.5 (mobile baseline), validated. Dan deploys it alongside Signify, tests on his iPhone, then removes it. Outcome gates the real mobile build.
