@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Signify — Compliant email signatures for Microsoft Outlook</title>
+  <meta name="description" content="Signify is a free, self-hosted Microsoft Outlook add-in for on-brand, compliant email signatures. Each person designs their own — and can't send without it. No backend, no per-user fees."/>
+  <link rel="icon" href="assets/icon-128.png"/>
+  <meta property="og:title" content="Signify — Compliant email signatures for Microsoft Outlook"/>
+  <meta property="og:description" content="Free, self-hosted Outlook signature management. Built for compliance."/>
+  <meta property="og:image" content="assets/icon-128.png"/>
+  <style>
+    :root{
+      --brand:#0f6cbd; --brand-dark:#0a4a85; --navy:#0a2540;
+      --ink:#1b2733; --muted:#56627a; --faint:#8a93a6;
+      --bg:#ffffff; --bg-soft:#f5f8fc; --line:#e4e9f1;
+      --ok:#1a7f37; --ok-soft:#e7f5ec;
+      --radius:14px; --radius-sm:10px; --maxw:1080px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased}
+    a{color:var(--brand);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+    .eyebrow{display:inline-block;font-size:13px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--brand)}
+
+    /* Top nav */
+    header.nav{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.92);backdrop-filter:saturate(150%) blur(8px);border-bottom:1px solid var(--line)}
+    .nav .wrap{display:flex;align-items:center;gap:14px;height:64px}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;color:var(--ink)}
+    .brand img{width:30px;height:30px;border-radius:7px}
+    .nav .spacer{flex:1}
+    .nav nav a{color:var(--muted);font-size:14px;font-weight:500;margin-left:22px}
+    .nav nav a:hover{color:var(--ink);text-decoration:none}
+    .btn{display:inline-block;font-weight:600;font-size:15px;border-radius:var(--radius-sm);padding:11px 20px;cursor:pointer;border:1px solid transparent;transition:background .12s,box-shadow .12s}
+    .btn-primary{background:var(--brand);color:#fff}
+    .btn-primary:hover{background:var(--brand-dark);text-decoration:none}
+    .btn-ghost{background:#fff;color:var(--ink);border-color:var(--line)}
+    .btn-ghost:hover{background:var(--bg-soft);text-decoration:none}
+    .nav .btn{padding:8px 16px;font-size:14px;margin-left:22px}
+
+    /* Hero */
+    .hero{background:linear-gradient(180deg,#f5f9fe 0%,#ffffff 100%);border-bottom:1px solid var(--line);overflow:hidden}
+    .hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;padding-top:64px;padding-bottom:64px}
+    .hero h1{font-size:46px;line-height:1.1;letter-spacing:-.5px;margin:14px 0 16px;font-weight:750}
+    .hero h1 .accent{color:var(--brand)}
+    .hero p.lead{font-size:19px;color:var(--muted);max-width:540px;margin-bottom:28px}
+    .hero .cta{display:flex;gap:12px;flex-wrap:wrap}
+    .pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+    .pill{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 13px;font-size:13px;font-weight:500;color:var(--ink)}
+    .pill svg{width:15px;height:15px;color:var(--ok)}
+
+    /* Editor mockup */
+    .mock{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 20px 50px -20px rgba(10,37,64,.28);overflow:hidden;font-size:13px}
+    .mock .m-head{background:var(--brand);color:#fff;padding:12px 16px}
+    .mock .m-head b{font-size:15px;font-weight:650;display:block}
+    .mock .m-head span{font-size:11px;opacity:.9}
+    .mock .m-libbar{display:flex;gap:6px;padding:10px 12px;background:var(--bg-soft);border-bottom:1px solid var(--line)}
+    .mock .m-pick{flex:1;border:1px solid var(--line);border-radius:8px;background:#fff;padding:7px 10px;font-size:12px;color:var(--ink);display:flex;align-items:center;justify-content:space-between}
+    .mock .m-ib{width:32px;height:32px;border:1px solid var(--line);border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;color:var(--ink)}
+    .mock .m-ib.red{color:#b3261e;border-color:#e6c9c7}
+    .mock .m-tools{display:flex;flex-wrap:wrap;gap:3px;align-items:center;padding:9px 12px;background:#fbfcfe;border-bottom:1px solid var(--line)}
+    .mock .m-tb{min-width:30px;height:30px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;color:var(--ink)}
+    .mock .m-sep{width:1px;height:18px;background:var(--line);margin:0 4px}
+    .mock .m-sel{height:30px;border:1px solid var(--line);border-radius:7px;background:#fff;display:inline-flex;align-items:center;padding:0 9px;font-size:12px;color:var(--muted)}
+    .mock .m-sig{padding:16px;font-family:Arial,sans-serif}
+    .mock .m-sig .n{font-size:15px;font-weight:bold;color:#000}
+    .mock .m-sig .t{font-size:12px;color:#555;padding-top:2px}
+    .mock .m-sig hr{border:none;border-top:1px solid #ddd;margin:8px 0}
+    .mock .m-sig .c{font-size:12px;color:#333}
+    .mock .m-sig .c a{color:var(--brand)}
+    .mock .m-sig .comp{margin-top:9px;padding:5px 9px;background:#f5f5f5;border-left:2px solid var(--brand);font-size:11px;color:#444}
+    .mock .m-protect{display:flex;align-items:center;gap:10px;margin:0 14px 14px;padding:9px 11px;border:1px solid var(--line);border-radius:10px}
+    .mock .m-protect .pt{flex:1;line-height:1.25}
+    .mock .m-protect .pt b{font-size:12px;display:block}
+    .mock .m-protect .pt span{font-size:10.5px;color:var(--muted)}
+    .mock .m-switch{width:44px;height:24px;border-radius:999px;background:var(--ok);position:relative;flex-shrink:0}
+    .mock .m-switch::after{content:"";position:absolute;top:3px;left:23px;width:18px;height:18px;border-radius:50%;background:#fff}
+
+    /* Sections */
+    section{padding:78px 0}
+    section.alt{background:var(--bg-soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+    .sec-head{max-width:680px;margin:0 auto 48px;text-align:center}
+    .sec-head h2{font-size:34px;letter-spacing:-.4px;font-weight:730;margin:10px 0 12px}
+    .sec-head p{font-size:18px;color:var(--muted)}
+
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+    .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:26px}
+    .card .ic{width:42px;height:42px;border-radius:10px;background:#eaf3fc;color:var(--brand);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+    .card .ic svg{width:22px;height:22px}
+    .card h3{font-size:18px;font-weight:650;margin-bottom:7px}
+    .card p{font-size:14.5px;color:var(--muted)}
+
+    /* Compliance band */
+    .band{background:var(--navy);color:#fff;border-radius:var(--radius);padding:46px 44px;display:grid;grid-template-columns:1.2fr 1fr;gap:36px;align-items:center}
+    .band h2{font-size:30px;font-weight:720;letter-spacing:-.3px;margin-bottom:12px}
+    .band p{color:#b9c6d8;font-size:16px}
+    .band ul{list-style:none;display:grid;gap:12px}
+    .band li{display:flex;gap:11px;align-items:flex-start;font-size:15px;color:#e7eef7}
+    .band li svg{width:20px;height:20px;color:#5fd08a;flex-shrink:0;margin-top:2px}
+
+    /* Steps */
+    .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;counter-reset:s}
+    .step{position:relative;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:24px 22px}
+    .step .num{width:32px;height:32px;border-radius:8px;background:var(--brand);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+    .step h4{font-size:16px;font-weight:650;margin-bottom:6px}
+    .step p{font-size:14px;color:var(--muted)}
+    .step code{background:var(--bg-soft);border:1px solid var(--line);border-radius:6px;padding:1px 5px;font-size:12px;word-break:break-all}
+    .note{margin-top:22px;font-size:14px;color:var(--muted);background:#fff;border:1px solid var(--line);border-left:3px solid var(--brand);border-radius:8px;padding:14px 18px}
+
+    .works{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+    .works .w{display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:10px 18px;font-size:14.5px;font-weight:500}
+    .works .w svg{width:18px;height:18px;color:var(--brand)}
+    .works .w.soon{color:var(--faint)}
+    .works .w.soon svg{color:var(--faint)}
+
+    /* Footer */
+    footer{background:var(--navy);color:#aebccd;padding:46px 0 40px}
+    footer .wrap{display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:space-between}
+    footer .brand{color:#fff}
+    footer a{color:#cdd9e8}
+    footer .f-meta{font-size:13.5px}
+    footer .f-links a{margin-left:18px;font-size:14px}
+
+    @media(max-width:880px){
+      .hero .wrap{grid-template-columns:1fr;gap:34px;padding-top:46px;padding-bottom:46px}
+      .hero h1{font-size:36px}
+      .grid{grid-template-columns:1fr}
+      .band{grid-template-columns:1fr;padding:34px 26px}
+      .steps{grid-template-columns:1fr}
+      .nav nav{display:none}
+    }
+  </style>
+</head>
+<body>
+
+  <header class="nav">
+    <div class="wrap">
+      <a class="brand" href="#top"><img src="assets/icon-128.png" alt="Signify logo"/> Signify</a>
+      <div class="spacer"></div>
+      <nav>
+        <a href="#features">Features</a>
+        <a href="#compliance">Compliance</a>
+        <a href="#install">Install</a>
+      </nav>
+      <a class="btn btn-primary" href="#install">Get the add-in</a>
+    </div>
+  </header>
+
+  <a id="top"></a>
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow">For Microsoft 365 &amp; Outlook</span>
+        <h1>Compliant email signatures, <span class="accent">without the subscription.</span></h1>
+        <p class="lead">Signify is a free, self-hosted Outlook add-in. Everyone on your team designs their own on-brand, compliant signature — and can't send an email without one.</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="#install">How to install</a>
+          <a class="btn btn-ghost" href="#features">See what it does</a>
+        </div>
+        <div class="pills">
+          <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> No per-user fees</span>
+          <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> No backend server</span>
+          <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Your data stays in your mailbox</span>
+        </div>
+      </div>
+
+      <div class="mock" role="img" aria-label="The Signify editor inside Outlook, showing a signature library, formatting toolbar, a sample compliant signature, and a Require-a-signature-to-send toggle.">
+        <div class="m-head"><b>Signify</b><span>Design your signatures — they save privately to your account</span></div>
+        <div class="m-libbar">
+          <div class="m-pick">Work signature <span style="color:#8a93a6">▾</span></div>
+          <div class="m-ib">＋</div>
+          <div class="m-ib">✎</div>
+          <div class="m-ib red">🗑</div>
+        </div>
+        <div class="m-tools">
+          <span class="m-tb" style="font-weight:800">B</span>
+          <span class="m-tb" style="font-style:italic;font-family:Georgia,serif">I</span>
+          <span class="m-tb" style="text-decoration:underline">U</span>
+          <span class="m-sep"></span>
+          <span class="m-sel">Font ▾</span><span class="m-sel">Size ▾</span>
+          <span class="m-sep"></span>
+          <span class="m-tb" style="font-weight:800">A</span>
+          <span class="m-sep"></span>
+          <span class="m-tb">≡</span><span class="m-tb">⛓</span><span class="m-tb">▦</span>
+        </div>
+        <div class="m-sig">
+          <div class="n">Jordan Avery</div>
+          <div class="t">Licensed Advisor &nbsp;•&nbsp; Northwind Financial</div>
+          <hr/>
+          <div class="c">Office: (555) 010-2200 &nbsp;|&nbsp; <a href="#install">jordan@northwind.example</a></div>
+          <div class="comp">License #FA-44821 &nbsp;•&nbsp; Regulated by the State Securities Board. Investments are not FDIC-insured.</div>
+        </div>
+        <div class="m-protect">
+          <div class="pt"><b>Require a signature to send</b><span>On — emails are blocked without a signature</span></div>
+          <div class="m-switch"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="features">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">What it does</span>
+        <h2>Signature management, minus the price tag</h2>
+        <p>The essentials the big tools charge per user for — done with files you host yourself.</p>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></div>
+          <h3>Design it your way</h3>
+          <p>A real visual editor — fonts, colours, links, images, layout. No rigid template; every signature is the user's own.</p>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18"/></svg></div>
+          <h3>Multiple saved signatures</h3>
+          <p>Keep a set — client-facing, internal, short reply — and switch between them. Rename and delete in a click.</p>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v12H7l-3 3Z"/></svg></div>
+          <h3>Lands in the right place</h3>
+          <p>One click drops your signature in after your new message and before the quoted thread — not buried at the very bottom.</p>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.4 8 11 4.6-2.6 8-6 8-11V5Z"/><path d="m9 12 2 2 4-4"/></svg></div>
+          <h3>Won't send without one</h3>
+          <p>A send-time check stops an email going out with no signature — with a clear, deliberate override when you truly need it.</p>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
+          <h3>Private by design</h3>
+          <p>Each person's signatures live in their own Microsoft 365 mailbox. No third-party server, no central database, nothing leaves your tenant.</p>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 0 1 4.5 1.5c0 1.5-2 2-2 3"/><path d="M12 17h.01"/></svg></div>
+          <h3>Free, full stop</h3>
+          <p>No per-seat licence, no trial clock. The files are hosted on free static hosting; you own and control all of it.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt" id="compliance">
+    <div class="wrap">
+      <div class="band">
+        <div>
+          <span class="eyebrow" style="color:#7fc8ff">Built for compliance</span>
+          <h2>Every signature, on the record</h2>
+          <p>If your industry needs license numbers, regulatory disclosures and disclaimers on every message, Signify makes that the default — not an afterthought.</p>
+        </div>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Put license numbers &amp; disclaimers in, formatted your way</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> A send-check so unsigned email doesn't slip out</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Per-person — everyone carries their own required text</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Setup</span>
+        <h2>Installed by your admin in minutes</h2>
+        <p>Signify is deployed once, centrally, from the Microsoft 365 admin centre — then it just appears for your team.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="num">1</div>
+          <h4>Open Integrated Apps</h4>
+          <p>In <a href="https://admin.microsoft.com">admin.microsoft.com</a> → Settings → Integrated Apps → <b>Upload custom apps</b>.</p>
+        </div>
+        <div class="step">
+          <div class="num">2</div>
+          <h4>Point it at the manifest</h4>
+          <p>Choose “Provide link to manifest file” and paste the link you were given (or the one below), then Validate.</p>
+        </div>
+        <div class="step">
+          <div class="num">3</div>
+          <h4>Assign your users</h4>
+          <p>Pick the people or groups who should have Signify, review, and Finish.</p>
+        </div>
+        <div class="step">
+          <div class="num">4</div>
+          <h4>It appears in Outlook</h4>
+          <p>Within a few hours, Signify shows up in the Apps area of the Outlook compose window for those users.</p>
+        </div>
+      </div>
+      <div class="note">
+        <b>Manifest link:</b> <code>https://manfredmaxx.github.io/EmailSignatures/manifest.xml</code><br/>
+        Signify uses Microsoft's event-based add-in feature for its send-check, so it must be deployed by an admin (centralised deployment) — it isn't a per-person self-install. A full step-by-step guide ships with the add-in.
+      </div>
+    </div>
+  </section>
+
+  <section class="alt">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Compatibility</span>
+        <h2>Works where you write email</h2>
+      </div>
+      <div class="works">
+        <span class="w"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Outlook on the web</span>
+        <span class="w"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> New Outlook for Windows</span>
+        <span class="w"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Classic Outlook desktop</span>
+        <span class="w soon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> Outlook mobile — in progress</span>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div class="brand" style="display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px"><img src="assets/icon-128.png" alt="" style="width:26px;height:26px;border-radius:6px"/> Signify</div>
+      <div class="f-meta">Created by Dan Lipworth · A free, self-hosted Outlook signature add-in · Built for compliance.</div>
+      <div class="f-links">
+        <a href="https://github.com/ManfredMaxx/EmailSignatures">Source &amp; guide</a>
+        <a href="#install">Install</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
