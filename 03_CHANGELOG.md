@@ -1,5 +1,9 @@
 # Signify — Changelog
 
+## Landing page + manifest metadata — 2026-06-25
+- **Public landing page shipped** at the GitHub Pages root (`index.html`), served at `https://manfredmaxx.github.io/EmailSignatures/`. Free static hosting, no backend, no new account. Honest positioning (only real features; mobile shown as in-progress), editor mockup, compliance band, 4-step admin install guide, Dan Lipworth credit. The manifest `SupportUrl` ("Created by") link now resolves to it.
+- **Manifest metadata updated** (manifest change, ≤24h propagation): Description → "…Built for Compliance.", `ProviderName` → "Dan Lipworth", `Version` 1.2.0.0 → **1.4.0.0** (ends the manifest/code version mismatch; re-uploaded via Admin Center "Update add-in").
+
 ## v1.4.0 — 2026-06-25 (signature library + send-block toggle; code-only, manifest unchanged)
 - **Multiple saved signatures.** Storage moved from a single `sigHtml` to a named library (`sigLibrary` in roamingSettings): a picker dropdown plus **New / Rename / Delete** (delete uses an in-pane confirm). Save / Insert / autosave all act on the selected signature. Existing `sigHtml` / `sigFields` migrate into the library automatically.
 - **Restore last saved** — revert the open editor to its stored version (discards the local draft).

@@ -30,13 +30,9 @@ _(Signature library, restore-last-saved, delete-with-confirm, the off-by-default
 
 - [ ] **Research easy no-backend image hosting** (plan path B) so "use my logo" resolves to a hosted URL without users needing to git-commit or find their own host. Options: an `assets/logos/` folder on the existing GitHub Pages with a low-friction upload flow (likely an admin one-time drop), or a guided in-pane flow. Rationale and trade-offs in `04_DECISIONS.md`.
 
-## Next — Public landing page (Dan, 2026-06-25)
+## Landing page — shipped (2026-06-25)
 
-- [ ] Build a marketing **landing page** at the GitHub Pages root (`index.html` at repo root → `https://manfredmaxx.github.io/EmailSignatures/`), so the manifest's `SupportUrl` ("Created by" link) resolves to it automatically.
-  - Layout/feel inspired by the Exclaimer site, but **honest** — only feature what Signify actually does (don't mirror Exclaimer features we lack).
-  - Explain what Signify does; some **screenshots**; real marketing copy / pizzazz.
-  - **Full install instructions** for a recipient who's been sent the `manifest.xml` by Signify (admin: Integrated Apps upload; note the send-block needs admin/centralized deployment, not individual sideload — see distribution notes in chat 2026-06-25).
-  - Keep it static (no backend), GitHub-Pages-hosted.
+✅ Live at `https://manfredmaxx.github.io/EmailSignatures/` (`index.html` at repo root). Honest positioning, editor mockup, compliance band, 4-step admin install guide; the manifest `SupportUrl` link resolves to it. Polish ideas for later: swap the CSS editor mockup for real Outlook screenshots, add an FAQ, consider a custom domain, and tune copy to Dan's taste.
 
 ## Later — Polish
 
