@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Signify Mobile Spike</title>
+  <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+  <style>
+    body{font-family:'Segoe UI',system-ui,Arial,sans-serif;padding:18px;font-size:14px;color:#1f2733;line-height:1.5}
+    h3{font-size:16px;margin-bottom:8px}
+    button{padding:11px 18px;font-size:14px;border:none;border-radius:8px;background:#0f6cbd;color:#fff;cursor:pointer;font-weight:600}
+    button:hover{background:#0c5aa0}
+    #s{margin-top:14px;font-size:13px;min-height:20px}
+    .ok{color:#1a7f37}.err{color:#b3261e}
+    ol{margin:12px 0 0 18px}li{margin-bottom:6px}
+  </style>
+</head>
+<body>
+  <h3>Signify mobile spike</h3>
+  <p>A throwaway test to confirm Outlook on iPhone can read settings saved from your desktop.</p>
+  <button onclick="writeTest()">Save test value</button>
+  <div id="s"></div>
+  <ol>
+    <li>Tap <b>Save test value</b> above (here, on desktop or web).</li>
+    <li>On your <b>iPhone</b>, open Outlook and compose a <b>New email</b>.</li>
+    <li>Watch for a <b>“Signify spike”</b> notification at the top, and read the message body.</li>
+  </ol>
+  <script>
+    Office.onReady(function () {});
+    function writeTest() {
+      var s = document.getElementById('s');
+      try {
+        var rs = Office.context.roamingSettings;
+        rs.set('spikeTest', 'desktop-write-OK');
+        rs.saveAsync(function (r) {
+          if (r.status === Office.AsyncResultStatus.Succeeded) {
+            s.className = 'ok'; s.textContent = 'Saved ✓ — now compose a New email on your iPhone.';
+          } else {
+            s.className = 'err'; s.textContent = 'Save failed: ' + ((r.error && r.error.message) || 'unknown');
+          }
+        });
+      } catch (e) { s.className = 'err'; s.textContent = 'Error: ' + e.message; }
+    }
+  </script>
+</body>
+</html>
