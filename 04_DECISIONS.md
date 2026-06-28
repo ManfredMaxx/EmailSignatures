@@ -157,4 +157,26 @@ _Append-only. Each entry: what was decided, why, and consequences._
 
 **Spike (built, awaiting Dan's on-device test):** to avoid risking the live desktop send-block, the de-risk is an **isolated test add-in** in `spike/` (own GUID `8FD29D48-…`), not a change to production. A desktop taskpane writes a test value to `roamingSettings`; an `OnNewMessageCompose` handler reads it back on iOS and reports — via an in-Outlook notification + inserted text — whether (a) the iOS event runtime can read `roamingSettings` and (b) `setSignatureAsync` works on iOS. Manifest min 1.5 (mobile baseline), validated. Dan deploys it alongside Signify, tests on his iPhone, then removes it. Outcome gates the real mobile build.
 
+---
+
+### 2026-06-25 — Spike PASSED: mobile single source confirmed (R7 green-lit)
+
+On-device iPhone test succeeded. The `OnNewMessageCompose` handler read the desktop-written `roamingSettings` value ("desktop-write-OK") **and** `setSignatureAsync` inserted on iOS. Confirms: (1) the iOS event runtime can read `roamingSettings`; (2) desktop→mobile `roamingSettings` sync works; (3) `setSignatureAsync` works on iOS. **The clean, no-backend, single-source mobile path (R7) is open** — proceed to the real mobile build (mobile default(s), new-vs-reply via `getComposeTypeAsync`, desktop auto-insert option). The 4×/day reminder task was disabled. The throwaway spike add-in can be removed from M365.
+
+---
+
+### 2026-06-25 — Feasibility: a desktop program feeding the add-in
+
+**Question (Dan):** could a separate desktop program create/deploy signatures that the add-in consumes, for more flexibility in how they're saved/deployed?
+
+**Verified present data (2026):** (a) **No Microsoft Graph API for Outlook signatures** — still unsupported (Microsoft Q&A, 2026). (b) The add-in's `roamingSettings` are stored as a single MAPI extended property `cecp-<app-guid>` (property set `{00020329-0000-0000-C000-000000000046}`) holding the settings as JSON — **readable** (and, unsupported, **writable**) externally via Microsoft Graph / EWS extended properties.
+
+**Core constraint:** the add-in and a desktop program can't talk directly; they bridge via a shared store. Options scoped:
+1. **Inject into `roamingSettings`** via the `cecp` extended property (Graph/EWS) — technically possible, but writes an undocumented internal format (fragile/unsupported) and needs an Entra app registration + mailbox permissions + admin consent. Advanced; not recommended as the primary path.
+2. **Add-in FETCHES from a shared store** the desktop program publishes to (per-user, keyed by email) — clean and supported (web + CORS). Cost = a reachable store (free static hosting with privacy caveats, or a small backend). This is the centralized-management model.
+3. **Import/export** — desktop designer exports HTML; the add-in gains an Import feature. Easiest, free, but manual hand-off.
+4. **Bypass the add-in** — a desktop tool (e.g. the open-source Set-OutlookSignatures, or CodeTwo) deploys the **native** Outlook signature, but loses the send-block + placement that make Signify valuable. _(Set-OutlookSignatures specifics from established knowledge; a search outage prevented re-verification.)_
+
+**Recommendation by goal:** richer *design* → #3; central *deployment* → #2. This overlaps with the "more robust system", image hosting, and R7 — a shared store could solve several at once. There is no clean Microsoft-blessed API, so every path trades automation against cost/fragility.
+
 **OUTCOME (2026-06-25): ✅ PASSED.** On Outlook for iPhone, the spike read the desktop-written `roamingSettings` value (`desktop-write-OK`) and inserted it via `setSignatureAsync` — confirming all three unknowns: (1) `roamingSettings` is readable in the iOS event runtime and syncs desktop→phone, (2) `setSignatureAsync` works on iOS, (3) `OnNewMessageCompose` fires on iPhone. **R7 (cross-platform single source) is green-lit with no backend.** The spike add-in can now be removed. Next: build the real mobile handler + the data-model changes (mobile default(s), new-vs-reply, desktop auto-insert option).
